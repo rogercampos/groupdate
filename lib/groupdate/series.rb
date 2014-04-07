@@ -82,7 +82,11 @@ module Groupdate
           if time_range.first
             series = [round_time(time_range.first)]
 
-            step = 1.send(@field)
+            if @field == "quarter"
+              step = 3.months
+            else
+              step = 1.send(@field)
+            end
 
             while time_range.cover?(series.last + step)
               series << series.last + step
@@ -151,6 +155,8 @@ module Groupdate
           (time - ((7 - @week_start + weekday) % 7).days).midnight
         when "month"
           time.beginning_of_month
+        when "quarter"
+          time.beginning_of_quarter
         else # year
           time.beginning_of_year
         end
